@@ -6,6 +6,15 @@
   "bin": {
     "chenbz": "./index.js"
   },
+  "homepage": "https://github.com/chenbz777/npm_cli",
+  "bugs": {
+    "url": "https://github.com/chenbz777/npm_cli/issues",
+    "email": "2516224721@qq.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chenbz777/npm_cli"
+  },
   "author": "chenbz",
   "license": "ISC",
   "dependencies": {
