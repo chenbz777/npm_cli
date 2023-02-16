@@ -8,50 +8,71 @@ function terminal(command) {
   return exec(command).toString();
 }
 
-function git_init() {
+git_init();
+
+async function git_init() {
   if (!fs.existsSync('./.git')) {
-    console.log('🌈 自动帮您初始化仓库');
-    terminal('git init');
+
+    const { git_init } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        message: '🌈 检测到未初始化仓库,是否需要帮您初始化:',
+        name: 'git_init',
+        default: true,
+      }
+    ]);
+
+    if (git_init) {
+      console.log('🌈 自动帮您初始化仓库');
+      terminal('git init');
+
+      init();
+    } else {
+      console.log('❌ 未初始化仓库,无法进行后续操作!');
+    }
+
+  } else {
+    init();
   }
 }
 
-git_init();
+function init() {
+  const prompList = [
+    {
+      type: 'rawlist',
+      message: '[git]请选择操作',
+      name: 'type',
+      choices: [
+        '上传代码',
+        '分支管理',
+        '克隆仓库',
+        '修改远程地址',
+      ],
+    }
+  ];
 
-const prompList = [
-  {
-    type: 'rawlist',
-    message: '[Git]请选择操作',
-    name: 'type',
-    choices: [
-      '上传代码',
-      '分支管理',
-      '克隆仓库',
-      '修改远程地址',
-    ],
-  }
-];
+  inquirer.prompt(prompList).then(answers => {
 
-inquirer.prompt(prompList).then(answers => {
+    const { type } = answers;
 
-  const { type } = answers;
-
-  switch (type) {
-    case '上传代码':
-      upload_code();
-      break;
-    case '分支管理':
-      branch_management();
-      break;
-    case '克隆仓库':
-      clone_remote();
-      break;
-    case '修改远程地址':
-      update_remote_url();
-      break;
-    default:
-      console.log('无法解析');
-  }
-});
+    switch (type) {
+      case '上传代码':
+        upload_code();
+        break;
+      case '分支管理':
+        branch_management();
+        break;
+      case '克隆仓库':
+        clone_remote();
+        break;
+      case '修改远程地址':
+        update_remote_url();
+        break;
+      default:
+        console.log('无法解析');
+    }
+  });
+}
 
 async function upload_code() {
 
@@ -77,8 +98,8 @@ async function upload_code() {
     console.log(terminal('git remote -v'));
   }
 
-  console.log('🌈 列出所有分支');
-  console.log(terminal('git branch -a'));
+  // console.log('🌈 列出所有分支');
+  // console.log(terminal('git branch -a'));
 
   const choices = [
     '新增一个功能',

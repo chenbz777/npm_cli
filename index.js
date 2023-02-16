@@ -10,7 +10,8 @@ const prompList = [
     message: '请选择要使用的工具:',
     name: 'type',
     choices: [
-      "Git",
+      'git',
+      'npm',
     ],
   }
 ];
@@ -20,8 +21,11 @@ inquirer.prompt(prompList).then(answers => {
   const { type } = answers;
 
   switch (type) {
-    case 'Git':
+    case 'git':
       require('./bin/git');
+      break;
+    case 'npm':
+      require('./bin/npm');
       break;
     default:
       console.log('无法解析');
