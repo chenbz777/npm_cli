@@ -1,0 +1,14 @@
+{
+  "name": "@chenbz/cli",
+  "version": "1.0.0",
+  "description": "@chenbz/cli",
+  "main": "index.js",
+  "bin": {
+    "chenbz": "./index.js"
+  },
+  "author": "chenbz",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^8.2.5"
+  }
+}
