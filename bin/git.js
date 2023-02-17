@@ -389,6 +389,8 @@ async function branchManagement() {
             choices: branchLocalArr,
             when: function (answers) {
 
+              branchLocalArr.splice(branchLocalArr.indexOf(answers.branchName), 1);
+
               return localNowBranch === answers.branchName;
             }
           }
