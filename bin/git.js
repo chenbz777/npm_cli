@@ -335,15 +335,25 @@ async function branchManagement() {
 
       break;
     case 1:
-      const { branchName: branchName1 } = await inquirer.prompt([
+      const { branchName: branchName1, checkoutNewBranch } = await inquirer.prompt([
         {
           type: 'input',
           message: '[输入] 请输入分支名称:',
           name: 'branchName'
+        },
+        {
+          type: 'confirm',
+          message: '[输入] 是否需要切换到新分支:',
+          name: 'checkoutNewBranch',
+          default: true,
         }
       ]);
 
       terminal(`git branch ${branchName1}`);
+
+      if (checkoutNewBranch) {
+        terminal(`git checkout ${branchName1}`);
+      }
 
       break;
     case 2:
@@ -360,16 +370,36 @@ async function branchManagement() {
 
       break;
     case 3:
-      const { branchName: branchName3 } = await inquirer.prompt([
-        {
-          type: 'list',
-          message: '[输入] 请选择[本地]分支名称:',
-          name: 'branchName',
-          choices: branchLocalArr,
-        }
-      ]);
+      if (branchLocalArr.length === 0) {
+        console.log('[提示] 无法读取到[本地]分支信息');
+      } else if (branchLocalArr.length === 1) {
+        console.log('[提示] 当前仅一个分支, 无法进行删除操作');
+      } else {
+        const { branchName: branchName3, switchNewBranchName } = await inquirer.prompt([
+          {
+            type: 'list',
+            message: '[输入] 请选择要删除的[本地]分支名称:',
+            name: 'branchName',
+            choices: branchLocalArr,
+          },
+          {
+            type: 'list',
+            message: '[输入] 请选择要切换到新的[本地]分支名称:',
+            name: 'switchNewBranchName',
+            choices: branchLocalArr,
+            when: function (answers) {
 
-      terminal(`git branch -D ${branchName3}`);
+              return localNowBranch === answers.branchName;
+            }
+          }
+        ]);
+
+        if (switchNewBranchName) {
+          terminal(`git checkout ${switchNewBranchName}`);
+        }
+
+        terminal(`git branch -D ${branchName3}`);
+      }
 
       break;
     case 4:
