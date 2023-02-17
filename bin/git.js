@@ -16,14 +16,14 @@ async function git_init() {
     const { git_init } = await inquirer.prompt([
       {
         type: 'confirm',
-        message: '🌈 检测到未初始化仓库,是否需要帮您初始化:',
+        message: '[提示] 检测到未初始化仓库,是否需要帮您初始化:',
         name: 'git_init',
         default: true,
       }
     ]);
 
     if (git_init) {
-      console.log('🌈 自动帮您初始化仓库');
+      console.log('[提示] 自动帮您初始化仓库');
       terminal('git init');
 
       init();
@@ -37,17 +37,20 @@ async function git_init() {
 }
 
 function init() {
+
+  const choices = [
+    '上传代码',
+    '分支管理',
+    '克隆仓库',
+    '修改远程地址',
+  ];
+
   const prompList = [
     {
       type: 'rawlist',
-      message: '[git]请选择操作',
+      message: '[git] 请选择操作',
       name: 'type',
-      choices: [
-        '上传代码',
-        '分支管理',
-        '克隆仓库',
-        '修改远程地址',
-      ],
+      choices,
     }
   ];
 
@@ -55,17 +58,19 @@ function init() {
 
     const { type } = answers;
 
-    switch (type) {
-      case '上传代码':
+    const index = choices.indexOf(type);
+
+    switch (index) {
+      case 0:
         upload_code();
         break;
-      case '分支管理':
+      case 1:
         branch_management();
         break;
-      case '克隆仓库':
+      case 2:
         clone_remote();
         break;
-      case '修改远程地址':
+      case 3:
         update_remote_url();
         break;
       default:
@@ -76,16 +81,16 @@ function init() {
 
 async function upload_code() {
 
-  console.log('🌈 上传代码');
+  console.log('[提示] 上传代码');
 
   let git_remote_url = terminal('git remote -v');
 
   if (!git_remote_url) {
-    console.log('🌈 检测到未设置远程仓库地址');
+    console.log('[提示] 检测到未设置远程仓库地址');
     const { text } = await inquirer.prompt([
       {
         type: 'input',
-        message: '🔍 请输入远程仓库地址:',
+        message: '[输入] 请输入远程仓库地址:',
         name: 'text'
       }
     ]);
@@ -94,11 +99,11 @@ async function upload_code() {
 
     terminal(`git remote add origin ${git_remote_url}`);
   } else {
-    console.log('🌈 读取到远程仓库地址:');
+    console.log('[提示] 读取到远程仓库地址:');
     console.log(terminal('git remote -v'));
   }
 
-  // console.log('🌈 列出所有分支');
+  // console.log('[提示] 列出所有分支');
   // console.log(terminal('git branch -a'));
 
   const choices = [
@@ -142,53 +147,53 @@ async function upload_code() {
   const { local_branch, remote_branch, commit_type, commit_m } = await inquirer.prompt([
     // {
     //   type: 'input',
-    //   message: '🔍 请输入要提交[本地]哪个分支(默认 master):',
+    //   message: '[输入] 请输入要提交[本地]哪个分支(默认 master):',
     //   name: 'local_branch',
     //   default: 'master',
     // },
     {
       type: 'list',
-      message: '🔍 请选择要提交[本地]哪个分支(默认 master):',
+      message: '[输入] 请选择要提交[本地]哪个分支(默认 master):',
       name: 'local_branch',
       choices: branch_local_arr,
       default: 'master',
     },
     // {
     //   type: 'input',
-    //   message: '🔍 请输入要提交到[远程]哪个分支(默认 master):',
+    //   message: '[输入] 请输入要提交到[远程]哪个分支(默认 master):',
     //   name: 'remote_branch',
     //   default: 'master',
     // },
     {
       type: 'list',
-      message: '🔍 请选择要提交到[远程]哪个分支(默认 master):',
+      message: '[输入] 请选择要提交到[远程]哪个分支(默认 master):',
       name: 'remote_branch',
       choices: branch_remote_arr,
       default: 'master',
     },
     {
       type: 'rawlist',
-      message: '🔍 选择本次提交性质(默认 1):',
+      message: '[输入] 选择本次提交性质(默认 1):',
       name: 'commit_type',
       choices,
       default: '新增一个功能',
     },
     {
       type: 'input',
-      message: '🔍 请输入本次提交描述:',
+      message: '[输入] 请输入本次提交描述:',
       name: 'commit_m',
     },
   ]);
 
   const choices_index = choices.indexOf(commit_type);
 
-  console.log('🌈 上传代码中...');
+  console.log('[提示] 上传代码中...');
 
   terminal('git add .');
   terminal(`git commit -m "${commit_type_arr[choices_index]} ${commit_m}"`);
   terminal(`git push origin ${local_branch}:${remote_branch}`);
 
-  console.log('🌈 上传代码完成');
+  console.log('[提示] 上传代码完成');
 }
 
 function branch_list() {
@@ -226,9 +231,9 @@ function branch_list() {
 
 async function branch_management() {
 
-  // console.log('🌈 分支管理');
+  // console.log('[提示] 分支管理');
 
-  // console.log('🌈 列出所有分支');
+  // console.log('[提示] 列出所有分支');
   console.log(terminal('git branch -a'));
 
   const { branch_local_arr, branch_remote_arr, local_now_branch } = branch_list();
@@ -236,7 +241,7 @@ async function branch_management() {
   const { branch_type } = await inquirer.prompt([
     {
       type: 'rawlist',
-      message: '🔍 选择要执行的内容(默认 1):',
+      message: '[输入] 选择要执行的内容(默认 1):',
       name: 'branch_type',
       choices: [
         '列出所有分支',
@@ -259,7 +264,7 @@ async function branch_management() {
       const { branch_name: branch_name1 } = await inquirer.prompt([
         {
           type: 'input',
-          message: '🔍 请输入分支名称:',
+          message: '[输入] 请输入分支名称:',
           name: 'branch_name'
         }
       ]);
@@ -271,7 +276,7 @@ async function branch_management() {
       const { branch_name: branch_name2 } = await inquirer.prompt([
         {
           type: 'list',
-          message: '🔍 请选择[本地]分支名称:',
+          message: '[输入] 请选择[本地]分支名称:',
           name: 'branch_name',
           choices: branch_local_arr,
         }
@@ -284,7 +289,7 @@ async function branch_management() {
       const { branch_name: branch_name3 } = await inquirer.prompt([
         {
           type: 'list',
-          message: '🔍 请选择[本地]分支名称:',
+          message: '[输入] 请选择[本地]分支名称:',
           name: 'branch_name',
           choices: branch_local_arr,
         }
@@ -297,7 +302,7 @@ async function branch_management() {
       const { branch_name: branch_name4 } = await inquirer.prompt([
         {
           type: 'input',
-          message: '🔍 请输入分支名称:',
+          message: '[输入] 请输入分支名称:',
           name: 'branch_name'
         }
       ]);
@@ -317,7 +322,7 @@ async function branch_management() {
       const { branch_name: branch_name5 } = await inquirer.prompt([
         {
           type: 'list',
-          message: '🔍 请选择[远程]分支名称:',
+          message: '[输入] 请选择[远程]分支名称:',
           name: 'branch_name',
           choices: branch_remote_arr,
         }
@@ -330,7 +335,7 @@ async function branch_management() {
       const { branch_name: branch_name6 } = await inquirer.prompt([
         {
           type: 'list',
-          message: '🔍 请选择[远程]分支名称:',
+          message: '[输入] 请选择[远程]分支名称:',
           name: 'branch_name',
           choices: branch_remote_arr,
         }
@@ -346,17 +351,17 @@ async function branch_management() {
 
 async function clone_remote() {
 
-  console.log('🌈 克隆仓库');
+  console.log('[提示] 克隆仓库');
 
   const { project_url, project_branch } = await inquirer.prompt([
     {
       type: 'input',
-      message: '🔍 请输入仓库地址:',
+      message: '[输入] 请输入仓库地址:',
       name: 'project_url',
     },
     {
       type: 'input',
-      message: '🔍 请输入要克隆的分支(默认 master):',
+      message: '[输入] 请输入要克隆的分支(默认 master):',
       name: 'project_branch',
       default: 'master',
     }
@@ -367,12 +372,12 @@ async function clone_remote() {
 
 async function update_remote_url() {
 
-  console.log('🌈 修改远程地址');
+  console.log('[提示] 修改远程地址');
 
   const { git_remote_url } = await inquirer.prompt([
     {
       type: 'input',
-      message: '🔍 请输入新的远程仓库地址:',
+      message: '[输入] 请输入新的远程仓库地址:',
       name: 'git_remote_url',
     },
   ]);
