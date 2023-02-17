@@ -15,6 +15,7 @@ const prompList = [
     message: '请选择要使用的工具:',
     name: 'type',
     choices,
+    loop: false,
   }
 ];
 

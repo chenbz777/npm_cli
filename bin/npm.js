@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
 const exec = require('child_process').execSync;
 const inquirer = require('inquirer');
 
@@ -26,6 +25,7 @@ function init() {
       message: '[npm] 请选择操作',
       name: 'type',
       choices,
+      loop: false,
     }
   ]).then(answers => {
 
