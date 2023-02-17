@@ -393,16 +393,23 @@ async function branchManagement() {
 
       break;
     case 5:
-      const { branchName: branchName5 } = await inquirer.prompt([
+      const { branchRemoteName, branchLocalName } = await inquirer.prompt([
         {
           type: 'list',
           message: '[输入] 请选择[远程]分支名称:',
-          name: 'branchName',
+          name: 'branchRemoteName',
           choices: branchRemoteArr,
+        },
+        {
+          type: 'list',
+          message: '[输入] 请选择[本地]分支名称:',
+          name: 'branchLocalName',
+          choices: branchLocalArr,
+          default: localNowBranch,
         }
       ]);
 
-      terminal(`git branch --set-upstream-to=origin/${branchName5}`);
+      terminal(`git branch --set-upstream-to=origin/${branchRemoteName} ${branchLocalName}`);
 
       break;
     case 6:
