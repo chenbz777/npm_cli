@@ -57,6 +57,7 @@ function main() {
     '上推代码',
     '拉取代码',
     '提交代码到[本地]仓库',
+    '合并分支',
     '分支管理',
     '克隆仓库',
     '修改远程地址',
@@ -87,12 +88,15 @@ function main() {
         submitCodeLocal();
         break;
       case 3:
-        branchManagement();
+        mergeCode();
         break;
       case 4:
-        cloneRemote();
+        branchManagement();
         break;
       case 5:
+        cloneRemote();
+        break;
+      case 6:
         updateRemoteUrl();
         break;
       default:
@@ -419,6 +423,9 @@ async function branchManagement() {
 
       break;
     case 2:
+
+      branchLocalArr.splice(branchLocalArr.indexOf(localNowBranch), 1);
+
       const { branchName: branchName2 } = await inquirer.prompt([
         {
           type: 'list',
@@ -560,4 +567,24 @@ async function updateRemoteUrl() {
   } else {
     terminal(`git remote add origin ${gitRemoteUrl}`);
   }
+}
+
+async function mergeCode() {
+
+  const { branchLocalArr, localNowBranch } = branchList();
+
+  console.log(`[提示] 当前分支为: ${localNowBranch}`);
+
+  branchLocalArr.splice(branchLocalArr.indexOf(localNowBranch), 1);
+
+  const { branchName } = await inquirer.prompt([
+    {
+      type: 'list',
+      message: '[输入] 请选择要合并的[本地]分支名称:',
+      name: 'branchName',
+      choices: branchLocalArr,
+    }
+  ]);
+
+  terminal(`git merge ${branchName}`);
 }
