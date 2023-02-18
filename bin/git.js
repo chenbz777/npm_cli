@@ -8,8 +8,6 @@ function terminal(command) {
   return exec(command).toString();
 }
 
-console.log(exec('git commit -a -m "docs: 版本号"'));
-
 init();
 
 async function init() {
