@@ -193,7 +193,8 @@ async function pushCode() {
 
   console.log('[提示] 上推代码中...');
 
-  terminal(`git commit -a -m "${commitTypeArr[choicesIndex]} ${commitText}"`);
+  terminal('git add .');
+  terminal(`git commit -m "${commitTypeArr[choicesIndex]} ${commitText}"`);
   terminal(`git push origin ${localBranch}:${remoteBranch}`);
 
   console.log('[提示] 上推代码完成');
@@ -309,7 +310,8 @@ async function submitCodeLocal() {
 
   console.log('[提示] 代码提交中...');
 
-  terminal(`git commit -a -m "${commitTypeArr[choicesIndex]} ${commitText}"`);
+  terminal('git add .');
+  terminal(`git commit -m "${commitTypeArr[choicesIndex]} ${commitText}"`);
 
   console.log('[提示] 代码提交完成');
 }
