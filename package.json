@@ -1,6 +1,6 @@
 {
   "name": "@chenbz/cli",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "@chenbz/cli",
   "main": "index.js",
   "bin": {
