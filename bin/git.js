@@ -586,5 +586,23 @@ async function mergeCode() {
     }
   ]);
 
-  terminal(`git merge ${branchName}`);
+  try {
+    terminal(`git merge ${branchName}`);
+  } catch (err) {
+
+    console.log(terminal('git status'));
+
+    const { isCloseMerge } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        message: '[提示] 代码合并失败, 是否取消合并:',
+        name: 'isCloseMerge',
+        default: true,
+      }
+    ]);
+
+    if (isCloseMerge) {
+      terminal('git merge --abort')
+    }
+  }
 }
