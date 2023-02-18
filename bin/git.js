@@ -1,14 +1,8 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const exec = require('child_process').execSync;
 const inquirer = require('inquirer');
-
-function terminal(command) {
-  return exec(command).toString();
-}
-
-init();
+const { terminal } = require('./utils');
 
 async function init() {
   const isGitInit = await gitInit();
@@ -605,4 +599,8 @@ async function mergeCode() {
       terminal('git merge --abort')
     }
   }
+}
+
+module.exports = {
+  init,
 }

@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 
-const exec = require('child_process').execSync;
 const inquirer = require('inquirer');
-
-function terminal(command) {
-  return exec(command).toString();
-}
+const { terminal } = require('./utils');
 
 function init() {
 
@@ -61,4 +57,6 @@ function init() {
   });
 }
 
-init();
+module.exports = {
+  init,
+}

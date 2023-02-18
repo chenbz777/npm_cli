@@ -27,10 +27,10 @@ inquirer.prompt(prompList).then(answers => {
 
   switch (index) {
     case 0:
-      require('./bin/git');
+      require('./bin/git').init();
       break;
     case 1:
-      require('./bin/npm');
+      require('./bin/npm').init();
       break;
     default:
       console.log('无法解析');
