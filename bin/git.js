@@ -56,6 +56,7 @@ function main() {
   const choices = [
     '上推代码',
     '拉取代码',
+    '提交代码到[本地]仓库',
     '分支管理',
     '克隆仓库',
     '修改远程地址',
@@ -83,12 +84,15 @@ function main() {
         pullCode();
         break;
       case 2:
-        branchManagement();
+        submitCodeLocal();
         break;
       case 3:
-        cloneRemote();
+        branchManagement();
         break;
       case 4:
+        cloneRemote();
+        break;
+      case 5:
         updateRemoteUrl();
         break;
       default:
@@ -191,8 +195,7 @@ async function pushCode() {
 
   console.log('[提示] 上推代码中...');
 
-  terminal('git add .');
-  terminal(`git commit -m "${commitTypeArr[choicesIndex]} ${commitText}"`);
+  terminal(`git commit -a -m "${commitTypeArr[choicesIndex]} ${commitText}"`);
   terminal(`git push origin ${localBranch}:${remoteBranch}`);
 
   console.log('[提示] 上推代码完成');
@@ -252,6 +255,65 @@ async function pullCode() {
   terminal(`git pull origin ${remoteBranch}:${localBranch}`);
 
   console.log('[提示] 拉取代码完成');
+}
+
+async function submitCodeLocal() {
+
+  const choices = [
+    '新增一个功能',
+    '修复一个Bug',
+    '文档变更',
+    '代码格式（不影响功能，例如空格、分号等格式修正）',
+    '代码重构',
+    '改善性能',
+    '测试',
+    '变更项目构建或外部依赖(例如scopes: webpack、gulp、npm等)',
+    '更改持续集成软件的配置文件和package中的scripts命令, 例如scopes: Travis, Circle等',
+    '变更构建流程或辅助工具',
+    '代码回退',
+  ];
+
+  const commitTypeArr = [
+    'feat:',
+    'fix:',
+    'docs:',
+    'style:',
+    'refactor:',
+    'perf:',
+    'test:',
+    'build:',
+    'ci:',
+    'chore:',
+    'revert:',
+  ];
+
+  const { localNowBranch } = branchList();
+
+  console.log(`[提示] 当前分支为: ${localNowBranch}`);
+
+  const { commitType, commitText } = await inquirer.prompt([
+    {
+      type: 'rawlist',
+      message: '[输入] 选择本次提交性质(默认 1):',
+      name: 'commitType',
+      choices,
+      loop: false,
+      default: '新增一个功能',
+    },
+    {
+      type: 'input',
+      message: '[输入] 请输入本次提交描述:',
+      name: 'commitText',
+    },
+  ]);
+
+  const choicesIndex = choices.indexOf(commitType);
+
+  console.log('[提示] 代码提交中...');
+
+  terminal(`git commit -a -m "${commitTypeArr[choicesIndex]} ${commitText}"`);
+
+  console.log('[提示] 代码提交完成');
 }
 
 async function isGitRemoteUrl() {
