@@ -7,9 +7,11 @@ const { terminal } = require('./utils');
 async function init() {
   const isGitInit = await gitInit();
 
-  if (isGitInit) {
-    main();
-  }
+  // if (isGitInit) {
+  //   main();
+  // }
+
+  main();
 }
 
 async function gitInit() {
@@ -33,9 +35,9 @@ async function gitInit() {
 
       result = true;
     } else {
-      console.log('[提示] 未初始化仓库,无法进行后续操作!');
+      // console.log('[提示] 未初始化仓库,无法进行后续操作!');
 
-      result = false;
+      // result = false;
     }
 
   } else {
